@@ -38,7 +38,14 @@
                             <img src="${book.coverImage || 'https://via.placeholder.com/100x150'}" alt="${book.title} Cover">
                         </div>
                         <div class="book-details">
-                            <div class="book-title">${book.title}</div>
+							<a href="book_details.html?bookId=${book._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">${book.title}
+							</a><
+							/div>
+							
+						
+							
+							
+							
                             <div class="recent-chapter">Recent Chapter: <a href="chapter.html?bookId=${book._id}">View Chapters</a></div>
                         </div>
                     `;

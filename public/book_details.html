@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="book_details(user).css">
+	
+</head>
+<body>
+    <div class="container">
+        <div class="header">BOOKS</div>
+        	<div class="content" id="book-content">
+        	</div>
+            </div>
+        </div>
+        <div class="footer">&copy; 2025</div>
+    </div>
+        
+        
+        
+   <script type="text/javascript">
+        
+        // Get book ID from URL
+	const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('bookId');
+		
+		
+		//Function to fetch book details
+	async function fetchBookDetails() {
+		
+		if (!bookId) {
+			alert("No book ID found in the URL.");
+			return;
+		}
+			
+        try {
+			
+		  const response1 = await fetch(`/api/books/${bookId}`);
+		
+				
+				
+		  if (!response1.ok) throw new Error('Failed to fetch book data');
+				
+		 
+				
+          const book = await response1.json();
+		
+		  
+		  console.log("Book: ", book);
+		  
+			
+		  const bookDetails = document.getElementById("book-content");
+    	  bookDetails.innerHTML = `
+			
+			<div class="image">
+            <img src="${book.coverImage}" alt="${book.title} Cover">
+            </div>
+				
+            <div class="details">
+            <h2>${book.title}</h2>
+            <p><strong>Chapter Count:</strong> ${book.chapters.length}</p>
+            <p><strong>Synopsis: </strong> {book.synopsis}:</p>
+            <p class="chapters">Other chapters found here: 
+				<a href="/"> Tapas </a> 
+			</p> 
+			<div> 
+			<div class="chapters" id="chapter-list">
+			</div> 
+			
+     `;
+	 
+  }
+  catch(error) { 
+  
+  console.error('Error fetching book details:', error); 
+  
+  }
+		
+}
+
+async function loadChapters() {
+	try { 
+	
+	  const response2 = await fetch(`/api/chapters/book/${bookId}`);
+	 if (!response2.ok) throw new Error('Failed to fetch chapter data');
+	   const chapters = await response2.json();
+	   console.log("Chapters: ", chapters);
+	   
+	   const chapterDetails = document.getElementById('chapter-list');
+	   chapterDetails.innerHTML = "";
+	   chapters.forEach(chapter => {
+    		const chapterCard = document.createElement('div');
+    		chapterCard.classList.add('chapter-item');
+    		chapterCard.innerHTML = `
+        <a href="view_chapter.html?chapterId=${chapter._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">
+            <strong>${chapter.title}</strong>
+        </a>
+    `;
+    		chapterDetails.appendChild(chapterCard);
+});	
+	 
+	}
+	catch (error) {
+		console.error("Problem fetching chapters:", error);
+	
+	}
+}
+	
+	window.onload = function() {
+		fetchBookDetails();
+		loadChapters();
+		
+	}
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+             /* const response = await fetch(`/api/books/${bookId}`);
+			 if (!response.ok) throw new Error('Failed to fetch book data');
+				
+             const book = await response.json();
+
+                // Populate the form with the book details
+                document.getElementById('book-title').value = book.title;
+                document.getElementById('book-synopsis').value = book.synopsis;
+                document.getElementById('book-cover-url').value = book.coverImage;
+
+         // Check the genres that apply to this book
+                preselectGenres(book.genres);
+				
+            } catch (error) {
+                console.error('Error fetching book details:', error);
+                alert('An error occurred while loading the book details.');
+            }
+        }
+		*/
+		
+		
+        
+        </script>
+        
+
+</body>
+</html>
