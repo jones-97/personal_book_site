@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter Viewing</title>
+  <link rel="stylesheet" href="view_chapter.css">
+  
+</head>
+<body>
+  <!-- Header -->
+  <div class="header" id="chap_number">
+    $_Chapter_number
+  </div>
+
+  <!-- Main container -->
+  <div class="main-container">
+    <div class="theme-selector">
+      Reading theme:
+      <button onclick="setTheme('light')">Light</button>
+      <button onclick="setTheme('dark')">Dark</button>
+      <button onclick="setTheme('yellow')">Yellow</button>
+    </div>
+    
+    <div class="reading-box" id="reading-box">
+    
+      <!-- <p>Chapter content goes here...</p> -->
+      
+	  <script>
+      
+      
+      const urlParams = new URLSearchParams(window.location.search);
+const chapterId = urlParams.get('chapter');
+
+// Fetch chapter content
+fetch(`http://localhost:5000/api/chapters/${chapterId}`)
+  .then((response) => response.json())
+  .then((chapter) => {
+    const chapterContent = document.querySelector('.chapter-content');
+	document.getElementById(chap_number).value = ${chapter.title};
+    chapterContent.innerHTML = `
+      <p>${chapter.content}</p>
+    `;
+  })
+  .catch((error) => console.error('Error fetching chapter content:', error));
+      
+      
+      </script>
+
+    </div>
+
+    <!-- Navigation buttons -->
+    <div class="navigation">
+      <button class="nav-button" onclick="previous" style="background-color: green;">⬅️</button>
+      <button class="nav-button" onclick="next" style="background-color: green;">➡️</button>
+      <button class="nav-button home" onclick="hoome" >🏠</button>
+    </div>
+  </div>
+  
+  <!-- Navigation control -->
+  <script> 
+  const urlParams = new URLSearchParams(window.location.search);
+const chapterId = urlParams.get('chapter');
+previousChapter = chapterId - 1;
+nextChapter = chapterId + 1;
+
+function previous() {
+	fetch(`http://localhost:5000/api/chapters/` + previousChapter)
+  .then((response) => response.json())
+  .then((chapter) => {
+    const chapterContent = document.querySelector('.chapter-content');
+	document.getElementById(chap_number).value = ${chapter.title};
+    chapterContent.innerHTML = `
+      <p>${chapter.content}</p>
+    `;
+  })
+  .catch((error) => console.error('Error fetching chapter content:', error));
+}
+
+function next() {
+	fetch(`http://localhost:5000/api/chapters/` + nextChapter)
+  .then((response) => response.json())
+  .then((chapter) => {
+    const chapterContent = document.querySelector('.chapter-content');
+	document.getElementById(chap_number).value = ${chapter.title};
+    chapterContent.innerHTML = `
+      <p>${chapter.content}</p>
+    `;
+  })
+  .catch((error) => console.error('Error fetching chapter content:', error));
+}
+
+function hoome() {
+	window.location.href="books.html";
+}
+
+// Fetch chapter content
+fetch(`http://localhost:5000/api/chapters/${chapterId}`)
+  .then((response) => response.json())
+  .then((chapter) => {
+    const chapterContent = document.querySelector('.chapter-content');
+    chapterContent.innerHTML = `
+      document.getElementById(chap_number).value = ${chapter.title};
+      <p>${chapter.content}</p>
+    `;
+  })
+  .catch((error) => console.error('Error fetching chapter content:', error));
+  
+  </script>
+
+  <!-- Footer -->
+  <footer style="text-align: center; padding: 1rem; background-color: gray; color: white;">
+    c 2025
+  </footer>
+
+  <script type="text/javascript">
+    // Function to set the reading theme
+    function setTheme(theme) {
+      const readingBox = document.getElementById('reading-box');
+      if (theme === 'light') {
+        readingBox.style.backgroundColor = 'white';
+        readingBox.style.color = 'black';
+      } else if (theme === 'dark') {
+        readingBox.style.backgroundColor = 'black';
+        readingBox.style.color = 'white';
+      } else if (theme === 'yellow') {
+        readingBox.style.backgroundColor = '#FFFAE5'; // Soft yellow
+        readingBox.style.color = 'black';
+      }
+    }
+  </script>
+</body>
+</html>

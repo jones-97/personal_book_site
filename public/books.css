@@ -1,0 +1,89 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8d7f4;
+            margin: 0;
+        }
+
+        .header {
+            background-color: #000;
+            color: #c6b1f8;
+            text-align: center;
+            padding: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem;
+            background-color: #ff7ed9;
+            min-height: 80vh;
+        }
+
+        .book-card {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 60%;
+            max-width: 600px;
+        }
+		
+		   .book-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+        }
+
+        .book-image {
+            width: 100px;
+            height: 100px;
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            margin-right: 1rem;
+        }
+
+        .book-details {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .recent-chapter {
+            font-size: 1rem;
+            color: #555;
+        }
+		
+		.login {
+			padding-bottom: 2rem;
+			font-size:1rem;
+			color: #00F ;
+			
+		}
+
+        .footer {
+            background-color: #7a7171;
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-style: italic;
+        }
+
+        .footer span {
+            color: #f8d7f4;
+        }
+   

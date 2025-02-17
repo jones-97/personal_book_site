@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Chapter</title>
+    <link rel="stylesheet" href="add_edit_chapter.css"  />
+</head>
+<body>
+	
+    <div class="container">
+    	<h5 id='book-title'> For Book: Book Title </h5>
+    	
+        <h1>ADD NEW CHAPTER</h1>
+        <form id='add-chapter-form'>
+            <label for="chapter-title">CHAPTER TITLE:</label>
+            <input type="text" id="chapter-title" name="chapter-title">
+            
+            <label for="content">CONTENT:</label>
+            <div class="toolbar">
+            <button type="button" onclick="formatText('bold')"><b>B</b></button>
+            <button type="button" onclick="formatText('italic')"><i>I</i></button>
+            <button type="button" onclick="formatText('underline')"><u>U</u></button>
+        </div>
+         
+           <div id="editor" contenteditable="true" class="editor-container" data-text="type here">
+                
+            </div>
+    	
+            
+            
+            
+            
+            
+        <!--    <textarea id="content" name="content" rows="10"></textarea>
+        -->
+            
+            <div class="buttons">
+            <button type="submit">CREATE</button>
+        </div>
+    </form>
+    </div>
+    <script>
+	const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('bookId');
+
+        // Fetch the book details from the backend
+	if (!bookId) {
+			alert("No book ID found in the URL.");
+			// return;
+	}
+		
+	async function addChapterPage() {
+		try {
+			const response = await fetch(`/api/books/${bookId}`);
+			
+			if (!response.ok) throw new Error("Error getting book");
+			const book = await response.json();
+			
+			document.getElementById('book-title').textContent = `For Book: ${book.title}`;
+		} catch (err) {
+			console.error("Error getting book title", error);
+		}
+	}
+	
+	
+	document.getElementById('add-chapter-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+			
+			const chapterData = {
+				bookId: bookId,
+				title: document.getElementById('chapter-title').value,
+				content: document.getElementById('editor').innerHTML,
+				
+			};
+			
+			if (!chapterData) {
+				console.log("Something is missing in chapterData");
+			}
+			
+			try {
+				const response = await fetch('/api/chapters/', {
+					method: 'POST',
+					     headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                    },
+                    body: JSON.stringify(chapterData),
+                });
+				
+				  if (response.ok) {
+                    alert('Chapter added successfully!');
+                    window.location.href = 'edit_book_chapters.html?bookId=' + bookId; // Redirect to settings page
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error adding chapter:', error);
+                alert('An error occurred while adding the chapter.');
+            }
+        });
+
+	window.onload = addChapterPage();
+			
+	</script>
+    <script>
+	// script.js
+function formatText(command) {
+    document.execCommand(command, false, null);
+}
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book Definition</title>
+    <link rel="stylesheet" href="add_edit_book.css" />
+</head>
+<body>
+    <div class="header"><strong>EDIT BOOK DEFINITION</strong></div>
+    <div class="container">
+    
+    <form id='edit-book-form'>
+        <label for="book-cover">Select Book Cover:</label>
+        <input type="text" id="book-cover-url" placeholder="Enter image URL" oninput="updateCoverPreview()">
+        <div class="cover-preview">
+            <div class="cover-preview">
+            <img id="cover-image" src="default-cover.jpg" alt="Book Cover" width="150">
+        </div>
+        </div>
+
+        <label for="book-title">Book Title:</label>
+        <input type="text" id="book-title" placeholder="Enter book title">
+
+        <label for="book-synopsis">Synopsis:</label>
+        <textarea id="book-synopsis" placeholder="Enter book synopsis"></textarea>
+      	<div class="genres" id='book-genre'>
+        
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Romance">Romance</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Fantasy">Fantasy</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Action">Action</div>
+            
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Mature">Mature</div>
+        
+        	<div class="genre-option" onclick="selectGenre(this)" data-genre="Contemporary">Contemporary</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Young Adult">Young Adult</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Short Story">Short Story</div>
+            
+        </div>        
+
+        <div class="edit-chapters" onclick="redirectToEditChapters()">
+            <span>Edit Chapters</span>
+        </div>
+
+        <div class="button-container">
+            <button class="button save-button" id="save-button" type="submit">SAVE</button>
+            <button class="button delete-button" id="delete-button">DELETE</button>
+        </div>
+          </form>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    <script>
+    
+    
+    // Get the book ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('bookId');
+
+        // Fetch the book details from the backend
+        async function fetchBookDetails() {
+			if (!bookId) {
+				alert("No book ID found in the URL.");
+				return;
+			}
+			
+            try {
+                const response = await fetch(`/api/books/${bookId}`);
+				if (!response.ok) throw new Error('Failed to fetch book data');
+				
+                const book = await response.json();
+
+                // Populate the form with the book details
+                document.getElementById('book-title').value = book.title;
+                document.getElementById('book-synopsis').value = book.synopsis;
+                document.getElementById('book-cover-url').value = book.coverImage;
+
+         // Check the genres that apply to this book
+                preselectGenres(book.genres);
+				
+            } catch (error) {
+                console.error('Error fetching book details:', error);
+                alert('An error occurred while loading the book details.');
+            }
+        }
+		
+	
+	
+	//Handle genres stored in database
+	function preselectGenres(selectedGenres) {
+    document.querySelectorAll('.genre-option').forEach(el => {
+        if (selectedGenres.includes(el.dataset.genre)) {
+            el.classList.add('selected');
+        } else {
+            el.classList.remove('selected'); // Ensure others are deselected
+        }
+    });
+}
+
+//Function to toggle selected genres
+function selectGenre(element) {
+	element.classList.toggle('selected');
+}
+
+// Get selected genres for form submission
+function getSelectedGenres() {
+    return Array.from(document.querySelectorAll('.genre-option.selected')).map(el => el.dataset.genre);
+}
+
+
+        // Handle form submission
+        document.getElementById('edit-book-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const title = document.getElementById('book-title').value;
+            const synopsis = document.getElementById('book-synopsis').value;
+            const coverImage = document.getElementById('book-cover-url').value;
+
+            // Get selected genres
+            const genres = getSelectedGenres();
+
+            // Prepare book data
+            const bookData = { title, synopsis, genres, coverImage };
+
+            try {
+                const response = await fetch(`/api/books/${bookId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                    },
+                    body: JSON.stringify(bookData),
+                });
+
+                if (response.ok) {
+                    alert('Book updated successfully!');
+                    window.location.href = 'site_settings.html'; // Redirect to settings page
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error updating book:', error);
+                alert('An error occurred while updating the book.');
+            }
+        });
+		
+
+        // Load book details when the page loads
+        window.onload = fetchBookDetails;
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <script>
+        document.getElementById('save-button').addEventListener('click', () => {
+            alert('Book saved!');
+        });
+
+        document.getElementById('delete-button').addEventListener('click', () => {
+            if (confirm('Are you sure you want to delete this book?')) {
+                alert('Book deleted.');
+            }
+        });
+
+        document.getElementById('edit-chapters').addEventListener('click', () => {
+            alert('Redirecting to edit chapters...');
+        });
+		
+        function updateCoverPreview() {
+            const url = document.getElementById('book-cover-url').value;
+            document.getElementById('cover-image').src = url || 'default-cover.jpg';
+        
+        }
+    </script>
+</body>
+</html>

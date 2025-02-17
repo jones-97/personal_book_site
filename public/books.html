@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <link rel="stylesheet" href="books.css" />
+</head>
+<body>
+    <div class="header">BOOKS </div>
+	 <div class="login"> <a href="/admin">Manage</a> </div>
+    <div class="content" id="books-container">
+   
+   <!-- Books are loaded here by Javascript -->
+   
+ 
+    </div>
+    <div class="footer">About: <span>c 2025</span></div>
+    
+     <script>
+        async function fetchBooks() {
+            try {
+                const response = await fetch("/api/books"); // Fetch books from backend
+                const books = await response.json();
+                const container = document.getElementById("books-container");
+
+                // Clear existing content
+                container.innerHTML = "";
+
+                books.forEach(book => {
+                    const bookCard = document.createElement("div");
+                    bookCard.classList.add("book-card");
+
+                    bookCard.innerHTML = `
+                        <div class="book-image">
+                            <img src="${book.coverImage || 'https://via.placeholder.com/100x150'}" alt="${book.title} Cover">
+                        </div>
+                        <div class="book-details">
+                            <div class="book-title">${book.title}</div>
+                            <div class="recent-chapter">Recent Chapter: <a href="chapter.html?bookId=${book._id}">View Chapters</a></div>
+                        </div>
+                    `;
+                    container.appendChild(bookCard);
+                });
+            } catch (error) {
+                console.error("Error fetching books:", error);
+            }
+        }
+
+        // Load books when the page loads
+        window.onload = fetchBooks;
+    </script>
+</body>
+</html>

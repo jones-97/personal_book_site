@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="book_details(user).css">
+	
+</head>
+<body>
+    <div class="container">
+        <div class="header">BOOKS</div>
+        <div class="content">
+        
+        <script type="text/javascript">
+        
+        // Get book ID from URL
+const urlParams = new URLSearchParams(window.location.search);
+const bookId = urlParams.get('book');
+
+// Fetch book details
+fetch(`http://localhost:5000/api/books/${bookId}`)
+  .then((response) => response.json())
+  .then((book) => {
+    const bookDetails = document.querySelector('.book-details');
+    bookDetails.innerHTML = 
+	
+	<div class="image">
+                <img src="${book.coverImage}" alt="${book.title} Cover">
+            </div>
+            <div class="details">
+                <h2>${book.title}</h2>
+                <p><strong>Chapter Count:</strong> ${book.chapters.length}</p>
+                <p><strong>Synopsis: </strong> {book.synopsis}:</p>
+                <p class="chapters">Other chapters found here: <a href="/"> Tapas </a> </p> 
+				<div> 
+			<div class="chapters"> 
+			<ul class="chapter-list">
+        ${book.chapters.map((chapter) => `
+          <li><a href="chapter.html?chapter=${chapter._id}">${chapter.title}</a></li>
+        `).join('')}
+      </ul>
+			</div>
+			
+    `;
+  })
+  .catch((error) => console.error('Error fetching book details:', error));
+        
+        </script>
+        
+</div>
+            </div>
+        </div>
+        <div class="footer">&copy; 2025</div>
+    </div>
+</body>
+</html>

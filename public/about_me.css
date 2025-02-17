@@ -1,0 +1,80 @@
+ body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .content {
+            display: flex;
+            background-color: #ffeb57;
+            padding: 50px;
+            justify-content: center;
+        }
+
+        .left-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .left-section img {
+            max-width: 90%;
+            border-radius: 10px;
+        }
+
+        .right-section {
+            flex: 1;
+            padding: 0 20px;
+        }
+
+        .name {
+            font-size: 2em;
+            color: #9b59b6;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #555;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 1em;
+        }
+
+        .contacts {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .contacts a {
+            text-decoration: none;
+            font-size: 1.5em;
+        }
+
+        .contacts .instagram {
+            color: #e4405f;
+        }
+
+        .contacts .email {
+            color: #000;
+        }
+
+        .contacts .phone {
+            color: #1ebea5;
+        }

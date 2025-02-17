@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Book</title>
+    <link rel="stylesheet" href="add_edit_book.css" />
+</head>
+<body>
+    <div class="header">ADD BOOK</div>
+    <div class="container">
+    <form id="add-book-form">
+        <label for="book-cover">Select Book Cover:</label>
+         <input type="text" id="book-cover-url" placeholder="Enter image URL" oninput="updateCoverPreview()">
+        <div class="cover-preview">
+            <img id="cover-image" src="default-cover.jpg" alt="Book Cover" width="150">
+        </div>
+
+        <label for="book-title">Book Title:</label>
+        <input type="text" id="book-title" placeholder="Enter book title">
+
+        <label for="book-synopsis">Synopsis:</label>
+        <textarea id="book-synopsis" placeholder="Enter book synopsis"></textarea>
+        
+        <div class="genres" id='book-genre'>
+        
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Romance">Romance</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Fantasy">Fantasy</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Action">Action</div>
+            
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Mature">Mature</div>
+        
+        	<div class="genre-option" onclick="selectGenre(this)" data-genre="Contemporary">Contemporary</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Young Adult">Young Adult</div>
+            <div class="genre-option" onclick="selectGenre(this)" data-genre="Short Story">Short Story</div>
+            
+        </div>
+
+
+        <div class="button-container">
+            <button class="button save-button" id="save-button" type="submit">CREATE BOOK</button>
+       
+        </div>
+        </form>
+    </div>
+
+<script>		
+
+  
+  // Handle form submission
+  
+        document.getElementById('add-book-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+			
+const selectedGenres = document.querySelectorAll('.genre-option:checked');
+
+
+//('.genre-option:checked');
+
+			
+
+            const bookData = {
+				coverImage: document.getElementById('book-cover-url').value,
+                title: document.getElementById('book-title').value,
+                synopsis: document.getElementById('book-synopsis').value,
+                genres: getSelectedGenres(),
+            };
+
+            try {
+                const response = await fetch('/api/books/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                    },
+                    body: JSON.stringify(bookData),
+                });
+
+                if (response.ok) {
+                    alert('Book added successfully!');
+                    window.location.href = 'site_settings.html'; // Redirect to settings page
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error adding book:', error);
+                alert('An error occurred while adding the book.');
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		 function updateCoverPreview() {
+            const url = document.getElementById('book-cover-url').value;
+            document.getElementById('cover-image').src = url || 'default-cover.jpg';
+        }
+		
+
+       
+	   function selectGenre(element) {
+        // Toggle the selected class instead of removing all others
+        element.classList.toggle('selected');
+    }
+
+    function getSelectedGenres() {
+        // Get all selected genres
+        return Array.from(document.querySelectorAll('.genre-option.selected')).map(el => el.dataset.genre);
+    }
+		
+    </script>
+    
+    <script>
+	
+	
+	function addNewBook() {
+			//Redirect to site settings
+			window.location.href = "/site_settings.html";
+		}	
+	
+	
+	
+	
+	</script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</body>
+</html>

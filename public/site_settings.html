@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Settings</title>
+    <link rel="stylesheet" href="site_settings.css" />
+</head>
+<body>
+    <header>
+        <h1>Site Settings</h1>
+        <button onclick="logout()">Logout</button>
+    </header>
+    
+		<h2>Books</h2>
+        
+    <div class="container" id="books-container">
+        <!-- Books will be loaded here -->
+    </div>
+        
+
+        <div class="add-book" onclick="redirectToAddBook()">
+            <span>Add new Book</span>
+        </div>
+        
+        
+        <script>
+    // Fetch books from the backend
+    async function fetchBooks() {
+        try {
+            const response = await fetch("/api/books"); // Fetch books from backend
+            const books = await response.json();
+			
+            const container = document.getElementById("books-container");
+
+            // Clear existing content
+            container.innerHTML = "";
+
+            // Loop through the books and create book cards
+            books.forEach(book => {
+                const bookCard = document.createElement("div");
+                bookCard.classList.add("book-card");
+
+                bookCard.innerHTML = `
+                    <img src="${book.coverImage || 'https://via.placeholder.com/100x150'}" alt="${book.title} Cover">
+                    <div class="book-details">
+                       <a href="edit_book.html?bookId=${book._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">
+                ${book.title}
+            </a>
+            <p><strong>Genres:</strong> ${book.genres.join(', ')}</p>
+                        <button onclick="manageChapters('${book._id}')">Manage Chapters</button>
+                    </div>
+                `;
+                container.appendChild(bookCard);
+            });
+        } catch (error) {
+            console.error("Error fetching books:", error);
+        }
+    }
+
+    // Load books when the page loads
+    window.onload = fetchBooks;
+
+    // Redirect to "Add New Book" page
+    function redirectToAddBook() {
+        window.location.href = "/add_book.html"; // Redirect to the "Add New Book" page
+    }
+
+    // Logout function
+    function logout() {
+        localStorage.removeItem('token'); // Remove the admin token
+        window.location.href = "/access_page.html"; // Redirect to the login page
+    }
+
+	//Edit book function
+	function editBook(bookId) {
+		window.location.href = '/edit-book.html?book=${bookId}';
+		//Redirect to edit book page
+	}
+		
+    // Edit chapters function
+    function manageChapters(bookId) {
+        window.location.href = '/edit_book_chapters.html?bookId='+bookId; 
+		// Redirect to edit chapters page
+    }
+</script>
+   
+
+</body>
+</html>

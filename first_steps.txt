@@ -1,0 +1,31 @@
+Hello there.
+
+Now, first things first.
+
+Install MongdoDB server (community edition). ✔🟫🟪❌
+
+Make sure it is running.
+
+Then for this code, run the initAdmin.js file first ("node initAdmin.js"). This is to initialize an administrator for the website.
+If you have done this, skip this step.
+
+Go now instead to the server.js file ("node server.js"). You can also run with "nodemon" instead of "node". 
+We are still developing the site.
+We haven't even finished dealing with the functionality, and we are still working on understanding how the backend works 😅.
+So let's take this step by step.
+
+ONGOING TASKS:
+Initialize administator user.
+Initialize server.js without problems.
+Now the code:
+Administrator side first
+Managing book content in the site settings.
+Find a way to add .doc files that will be rendered for viewing
+Adding email functionality in case of "forgot password"
+
+Client side next
+List of books page (try working with 3 or 4 or more to understanding its functionality).
+Chapter list of each book.
+Chapter viewing content page. Enable support for bold and italics reading.
+Manage the navigation buttons at the bottom.
+Later check on adding ads to the site.

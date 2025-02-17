@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Chapter</title>
+    <link rel="stylesheet" href="add_edit_chapter.css"  />
+</head>
+<body>
+    <div class="container">
+    	 <h5 id='book-title'> For Book: Book Title </h5>
+       
+    
+        <h1>EDIT CHAPTER</h1>
+        <form id='edit-chapter-form'>
+            <label for="chapter-title">CHAPTER TITLE:</label>
+            <input type="text" id="chapter-title" name="chapter-title">
+            
+            <label for="content">CONTENT:</label>
+            <div class="toolbar">
+            <button type="button" onclick="formatText('bold')"><b>B</b></button>
+            <button type="button" onclick="formatText('italic')"><i>I</i></button>
+            <button type="button" onclick="formatText('underline')"><u>U</u></button>
+        </div>
+        <div id="editor" contenteditable="true" class="editor-container">
+                
+            </div>
+        <div class="buttons">
+          <button type="submit">SAVE EDITS</button>
+                <button type="button" onclick="deleteChapter()">DELETE</button>
+            </div>
+        </form>
+    </div>
+    <script>
+	
+	const urlParams = new URLSearchParams(window.location.search);
+    const chapterId = urlParams.get('chapterId');
+	
+	if (!chapterId) {
+			alert("No book ID found in the URL.");
+			// return;
+	}
+	
+	
+	
+	async function loadChapterPage() {
+		try {
+			const response = await fetch(`/api/chapters/${chapterId}`);
+			
+			if (!response.ok) throw new Error("Error getting chapter");
+			const chapter = await response.json();
+			
+			document.getElementById('chapter-title').value = chapter.title;
+			document.getElementById('editor').innerHTML = chapter.content;
+			
+			const response2 = await fetch(`/api/books/${chapter.bookId}`);
+			if (!response2.ok) throw new Error("Error getting book of chapter");
+			const book = await response2.json();
+			
+			document.getElementById('book-title').textContent = `For Book: ${book.title}`;
+		} catch (err) {
+			console.error("Error getting book title", err);
+		}
+	}
+	
+	
+	document.getElementById('edit-chapter-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+			
+			const chapterData = {
+				title: document.getElementById('chapter-title').value,
+				content: document.getElementById('editor').innerHTML,
+				
+			};
+			
+			if (!chapterData) {
+				console.log("Something is missing in chapterData");
+			}
+			console.log("Chapter title is: " + document.getElementById('chapter-title').value);
+			console.log("Chapter content is: " + document.getElementById('editor').innerHTML);
+			try {
+				const response = await fetch('/api/chapters/' + chapterId, {
+					method: 'PUT',
+					     headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+                    },
+                    body: JSON.stringify(chapterData),
+                });
+				
+				  if (response.ok) {
+                    alert('Chapter edited successfully!');
+                    window.location.href = 'site_settings.html'; // Redirect to settings page
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error saving edits:', error);
+                alert('An error occurred while savind the edited chapter.');
+            }
+        });
+
+	window.onload = loadChapterPage();
+			
+	
+	</script>
+</body>
+
+</html>

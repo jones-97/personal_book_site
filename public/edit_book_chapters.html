@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Chapters</title>
+    <link rel="stylesheet" href="edit_book_chapters.css"  />
+</head>
+<body>
+    <header id='book-title'>Book: $_book_title</header>
+
+    <div class="container">
+        <div class="status">
+            <span class="status-label">CAN BE VIEWED BY PUBLIC?</span>
+            <span class="status-value">$_viewing_status</span>
+        </div>
+
+        <div class="chapters-section">
+            <h2>CHAPTERS:</h2>
+            <div class="chapter-placeholder" id='chapter-container'>Chapter list will appear here</div>
+        </div>
+
+        <div class="actions">
+            <button onclick="addNewChapter()">ADD NEW CHAPTER</button>
+            <button onclick="enablePublicAccess()">ENABLE BOOK PUBLIC ACCESS</button>
+        </div>
+    </div>
+
+
+
+
+<script> 
+
+// Get the book ID from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('bookId');
+
+        // Fetch the book details from the backend
+    async function fetchBookChapters() 
+	{
+		if (!bookId) {
+			alert("No book ID found in the URL.");
+			return;
+		}
+			
+        try {
+   
+		  const response1 = await fetch(`/api/books/${bookId}`);
+		  const response2 = await fetch(`/api/chapters/book/${bookId}`);
+				
+				
+		  if (!response1.ok) throw new Error('Failed to fetch book data');
+				
+		  if (!response2.ok) throw new Error('Failed to fetch chapter data');
+				
+          const book = await response1.json();
+		  const chapters = await response2.json();
+		  console.log("Book: ", book);
+		  console.log("Chapters: ", chapters);
+
+                // Populate the form with the book details
+          document.getElementById('book-title').innerHTML = `Book: ${book.title}`;
+          
+		  const container = document.getElementById('chapter-container');
+		  container.innerHTML = ""; // Clear existing content
+
+		  chapters.forEach(chapter => {
+    		const chapterCard = document.createElement('div');
+    		chapterCard.classList.add('chapter-item');
+    		chapterCard.innerHTML = `
+        <a href="edit_chapter.html?chapterId=${chapter._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">
+            <strong>${chapter.title}</strong>
+        </a>
+    `;
+    		container.appendChild(chapterCard);
+});	
+     } 
+	   catch (error) {
+          console.error('Error fetching chapter details:', error);
+          alert('An error occurred while loading the book chapter details.');
+            }
+        }
+		
+	async function addNewChapter() {
+			
+		window.location.href = '/add_chapter.html?bookId=' + bookId;
+
+}
+
+
+window.onload = fetchBookChapters();
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+    <script>
+        function addChapter() {
+            alert('Add New Chapter functionality coming soon!');
+        }
+
+        function enablePublicAccess() {
+            alert('Enable Public Access functionality coming soon!');
+        }
+    </script>
+</body>
+</html>

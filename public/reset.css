@@ -1,0 +1,60 @@
+<style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .header {
+            background-color: black;
+            color: white;
+            padding: 20px 0;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .content {
+            background-color: #ffeb57;
+            padding: 50px;
+            min-height: 100vh;
+        }
+
+        .message {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .form-container {
+            display: inline-block;
+            text-align: left;
+        }
+
+        label {
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .reset-btn {
+            background-color: #c5cafe;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background-color: #a9b1e2;
+        }
+    </style>
