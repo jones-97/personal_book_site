@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Details</title>
-    <link rel="stylesheet" href="book_details(user).css">
+    <link rel="stylesheet" href="view_book.css">
 	
 </head>
 <body>
+	<div class="header"> 
+    <button onclick="backHome()">Return</button></div>
     <div class="container">
-        <div class="header">BOOKS</div>
+     <!--   <div class="header">BOOKS</div> -->
+        
         	<div class="content" id="book-content">
         	</div>
+            
+         
+            <div class="chapters-section">
+            	<div class="chapter-placeholder" id='chapter-container'>Chapter list will appear here
+            </div>
+        </div>
+        
             </div>
         </div>
         <div class="footer">&copy; 2025</div>
@@ -53,14 +63,14 @@
 		  const bookDetails = document.getElementById("book-content");
     	  bookDetails.innerHTML = `
 			
-			<div class="image">
+			<div class="image" id='book-cover'>
             <img src="${book.coverImage}" alt="${book.title} Cover">
             </div>
 				
             <div class="details">
             <h2>${book.title}</h2>
             <p><strong>Chapter Count:</strong> ${book.chapters.length}</p>
-            <p><strong>Synopsis: </strong> {book.synopsis}:</p>
+            <p><strong>Synopsis: </strong> ${book.synopsis}:</p>
             <p class="chapters">Other chapters found here: 
 				<a href="/"> Tapas </a> 
 			</p> 
@@ -87,13 +97,13 @@ async function loadChapters() {
 	   const chapters = await response2.json();
 	   console.log("Chapters: ", chapters);
 	   
-	   const chapterDetails = document.getElementById('chapter-list');
+	   const chapterDetails = document.getElementById('chapter-container');
 	   chapterDetails.innerHTML = "";
 	   chapters.forEach(chapter => {
     		const chapterCard = document.createElement('div');
     		chapterCard.classList.add('chapter-item');
     		chapterCard.innerHTML = `
-        <a href="view_chapter.html?chapterId=${chapter._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">
+        <a href="view_chapter.html?chapterId=${chapter._id}&bookId=${bookId}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">
             <strong>${chapter.title}</strong>
         </a>
     `;
@@ -113,7 +123,9 @@ async function loadChapters() {
 		
 	}
 			  
-			  
+	function backHome() {
+ window.location.href = "books.html";
+ }		  
 			  
 			  
 			  

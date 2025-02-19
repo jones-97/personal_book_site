@@ -29,35 +29,54 @@
                 // Clear existing content
                 container.innerHTML = "";
 
-                books.forEach(book => {
-                    const bookCard = document.createElement("div");
-                    bookCard.classList.add("book-card");
+                for (const book of books) {
+					
+                   const bookCard = document.createElement("div");
+                   bookCard.classList.add("book-card");
+					
+				   const recentChapter = await fetchRecentChapter(book._id);
 
-                    bookCard.innerHTML = `
+                   bookCard.innerHTML = `
                         <div class="book-image">
                             <img src="${book.coverImage || 'https://via.placeholder.com/100x150'}" alt="${book.title} Cover">
                         </div>
                         <div class="book-details">
-							<a href="book_details.html?bookId=${book._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">${book.title}
-							</a><
-							/div>
-							
-						
+							<a href="view_book.html?bookId=${book._id}" style="color: #FF4081; font-size: 1.2rem; text-decoration: none;">${book.title}
+							</a>
+							</div>		
 							
 							
-							
-                            <div class="recent-chapter">Recent Chapter: <a href="chapter.html?bookId=${book._id}">View Chapters</a></div>
+                            <div class="recent-chapter">Recent Chapter: <span class="recent-chapter-title">${recentChapter || 'No chapters yet'}</span>
                         </div>
                     `;
                     container.appendChild(bookCard);
-                });
+					
+                }
             } catch (error) {
                 console.error("Error fetching books:", error);
             }
         }
 
+async function fetchRecentChapter(bookId) {
+	try {
+		const response = await fetch(`/api/chapters/book/${bookId}/latest`);
+		 if (!response.ok) throw new Error('Failed to fetch latest chapter for books in books.html');
+	    const latestChapter = await response.json();
+	   console.log("Latest chapter for : " + bookId + " is: " + latestChapter);
+	   return latestChapter;
+	   
+		
+	} catch (error) {
+		
+		console.error("Problem getting recent chapter: ", error);
+		return null;
+	}
+	
+	
+}
         // Load books when the page loads
-        window.onload = fetchBooks;
+        window.onload = fetchBooks();
+		
     </script>
 </body>
 </html>

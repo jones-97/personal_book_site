@@ -5,32 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chapter Viewing</title>
   <link rel="stylesheet" href="view_chapter.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
   
 </head>
 <body>
+	<!-- Reading style options -->
+  <script type="text/javascript">
+    // Function to set the reading theme
+    function setTheme(theme) {
+      const readingBox = document.getElementById('reading-box');
+      if (theme === 'light') {
+        readingBox.style.backgroundColor = 'white';
+        readingBox.style.color = 'black';
+      } else if (theme === 'dark') {
+        readingBox.style.backgroundColor = 'black';
+        readingBox.style.color = 'white';
+      } else if (theme === 'yellow') {
+        readingBox.style.backgroundColor = '#FFFAE5'; // Soft yellow
+        readingBox.style.color = 'black';
+      }
+    }
+
+   </script>
+   
   <!-- Header -->
   <div class="header" id="chapter-title">
     $_Chapter_number
+    <button onclick="backToBook()">Return</button>
   </div>
 
   <!-- Main container -->
   <div class="main-container">
+  
     <div class="theme-selector">
       Reading theme:
       <button onclick="setTheme('light')">Light</button>
       <button onclick="setTheme('dark')">Dark</button>
       <button onclick="setTheme('yellow')">Yellow</button>
-    </div>
+  </div>
     
-    <div class="reading-box" id="reading-box">
+  <div class="reading-box" id="reading-box">
     
       <!-- <p>Chapter content goes here...</p> -->
       
-	  <script>
+  </div>
       
+      <!-- Navigation buttons -->
+  <div class="navigation">
+      <button class="nav-button" onclick="previous()" style="background-color: green;">⬅️</button>
+      <button class="nav-button" onclick="next()" style="background-color: green;">➡️</button>
+      <button class="nav-button home" onclick="backToBook()" >🏠</button>
+   </div>
+    
+ 
+  
+  </div>
+       <!-- Footer -->
+  <footer style="text-align: center; padding: 1rem; background-color: gray; color: white;">
+    c 2025
+  </footer>
+	  
+<script>
       
     const urlParams = new URLSearchParams(window.location.search);
 	const chapterId = urlParams.get('chapterId');
+	const bookId = urlParams.get('bookId');
+	//console.log("Chapter ID: ", chapterId);
+	console.log("Book ID: ", bookId);
 
 	async function loadChapter() {
 	 try { 
@@ -39,9 +80,10 @@
 	 if (!response.ok) throw new Error('Failed to fetch chapter data');
 	   const currentChapter = await response.json();
 	   
+	   const sanitizedContent = DOMPurify.sanitize(currentChapter.content); // Sanitize the content
 	  const chapterView = document.getElementById('reading-box');
-	   chapterView.textContent = currentChapter.content;
-	   document.getElementById('chapter-title').innerHTML = currentChapter.title;
+	   chapterView.innerHTML = sanitizedContent;
+	   document.getElementById('chapter-title').innerHTML = currentChapter.title + "  <button onclick='backToBook()'>Return</button>";
 	 
 	}
 	catch (error) {
@@ -51,7 +93,73 @@
 	
 }
 
-window.onload = loadChapter();
+/*
+async function getBookChapters() {
+	try { 
+	
+	  const response2 = await fetch(`/api/chapters/${bookId}`);
+	 if (!response2.ok) throw new Error('Failed to fetch chapter data');
+	   const chapters = await response2.json();
+	   return chapters;
+	}
+	catch (error) {
+		console.error("Failed to fetch the chapters of the book", error);
+		return "This is empty";
+	}
+}
+*/
+
+<!-- Navigation control -->
+
+let chapterIds = []; // Store the list of chapter IDs for the book
+let currentIndex = -1; // Track the current chapter's index
+
+// Fetch the list of chapter IDs for the book
+async function fetchChapterIds() {
+    try {
+      const response = await fetch(`/api/chapters/ids/${bookId}`);
+       if (!response.ok) throw new Error('Failed to fetch chapter IDs');
+        chapterIds = await response.json();
+        currentIndex = chapterIds.indexOf(chapterId);
+        console.log('Chapter IDs:', chapterIds, 'Current Index:', currentIndex);
+    } catch (error) {
+        console.error('Error fetching chapter IDs:', error);
+		console.log("Failed to fetch chapter ID list");
+    }
+}
+
+// Previous chapter
+  function previous() {
+    if (currentIndex > 0) {
+        const prevChapterId = chapterIds[currentIndex - 1];
+        window.location.href = `view_chapter.html?bookId=${bookId}&chapterId=${prevChapterId}`;
+    } else {
+        alert('No previous chapter.');
+    }
+}
+
+// Next chapter
+  function next() {
+    if (currentIndex < chapterIds.length - 1) {
+        const nextChapterId = chapterIds[currentIndex + 1];
+        window.location.href = `view_chapter.html?bookId=${bookId}&chapterId=${nextChapterId}`;
+    } else {
+        alert('No next chapter.');
+    }
+}
+
+// Load chapter data and IDs when the page loads
+window.onload = async () => {
+    await loadChapter();
+    await fetchChapterIds(); // Fetch chapter IDs after loading the current chapter
+};
+
+function backToBook() {
+	window.location.href = `view_book.html?bookId=${bookId}`;
+	
+}
+
+
   </script>
 </body>
 </html>
