@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="edit_book_chapters.css"  />
 </head>
 <body>
-    <header id='book-title'>Book: $_book_title</header>
+    <header><span id='book-title'>Book: $_book_title</span>
+    <button onclick="goBack()">Return</button>
+    </header>
 
     <div class="container">
         <div class="status">
@@ -87,6 +89,10 @@
 
 }
 
+function goBack() {
+	window.location.href="site_settings.html";
+	}
+
 
 window.onload = fetchBookChapters();
 
@@ -110,6 +116,7 @@ window.onload = fetchBookChapters();
         function enablePublicAccess() {
             alert('Enable Public Access functionality coming soon!');
         }
+		
     </script>
 </body>
 </html>

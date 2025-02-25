@@ -1,78 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Page</title>
     <link rel="stylesheet" href="admin.css" />
-    
-	<script type="text/javascript"> 
-    const token = localStorage.getItem('adminToken');
-
-fetch('http://localhost:5000/api/admin/dashboard', {
-  method: 'GET',
-  headers: { 'Authorization': `Bearer ${token}` },
-})
-.then((response) => response.json())
-.then((data) => console.log(data))
-.catch((error) => console.error('Error:', error));</script>
-
 </head>
-
 <body>
-
     <div class="header">
-    ACCESS PAGE
-    
-    <button onclick="backHome()">Return</button>
+        ACCESS PAGE
+        <button onclick="backHome()">Return</button>
     </div>
-   
     <div class="content">
         <p class="note">Note that this section is meant for site admin.</p>
-        
         <div class="form-container">
-            <form id ="admin-login-form" >
+            <form id="admin-login-form">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password">
-                <a href="/forgot_password.html" class="forgot-password">Forgot password?</a>
-                <button type="submit" class="login-btn" onclick="log_user">Login</button>
+                <button type="submit" class="login-btn">Login</button>
             </form>
+            <button id="forgot-btn" onclick="forgotPassword()">Forgot password?</button>
         </div>
     </div>
- <script type="text/javascript"> 
- 	document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
 
-  const password = document.getElementById('password').value;
+    <script>
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
 
-  try {
-    const response = await fetch('http://localhost:5000/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    });
+            try {
+                const response = await fetch('http://localhost:5000/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
 
-    const data = await response.json();
+                const data = await response.json();
 
-    if (response.ok) {
-      localStorage.setItem('adminToken', data.token); // Store the token
-      window.location.href = 'site_settings.html'; // Redirect to dashboard
-    } else {
-      alert("Wrong password. Try again");
-    }
-  } catch (err) {
-    console.error('Error during login:', err);
-  }
-});
- </script>
- <script> 
- 
- function backHome() {
- window.location.href = "books.html";
- }
- </script>
-    
+                if (response.ok) {
+                    localStorage.setItem('adminToken', data.token);
+                    window.location.href = 'site_settings.html';
+                } else {
+                    alert("Wrong password. Try again");
+                }
+            } catch (err) {
+                console.error('Error during login:', err);
+            }
+        });
+
+        async function forgotPassword() {
+            try {
+                const response = await fetch('/api/admin/request-reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to send reset code');
+                }
+
+                const data = await response.json();
+                alert(data.message);
+                window.location.href = 'forgot_password.html';
+            } catch (error) {
+                console.error('Error requesting reset:', error);
+                alert('Failed to send reset code. Please try again.');
+            }
+        }
+
+        function backHome() {
+            window.location.href = "books.html";
+        }
+    </script>
 </body>
 </html>

@@ -3,14 +3,29 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
-
+/*
         .header {
             background-color: black;
             color: white;
             padding: 20px 0;
+			justify-content: space-between;
             font-size: 2em;
             font-weight: bold;
         }
+		
+		*/
+		 .header {
+            background-color: black;
+            color: white;
+            display: flex;
+			align-items: center;
+			font-weight: bold;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+		
+		
 		
 		.header button {
             background-color: blue;
@@ -21,7 +36,10 @@
             cursor: pointer;
             font-size: 1rem;
         }
-
+		
+		header button:hover {
+            background-color: darkblue;
+        }
 
         .content {
             background-color: #ffeb57;
@@ -38,6 +56,17 @@
             display: inline-block;
             text-align: left;
         }
+		
+		#forgot-btn {
+			margin-top: 0.5rem;
+			border: none;
+			border-radius: 20px;
+            cursor: pointer;
+			color: white;
+			background-color: teal;
+			padding: 10px 20px;
+            border-radius: 20px;
+			}
 
         label {
             font-size: 1.5em;
@@ -53,7 +82,8 @@
         }
 
         .forgot-password {
-            color: teal;
+			margin-top: 0.4rem;
+            background-color: teal;
             font-style: italic;
             margin-bottom: 30px;
             display: block;
@@ -76,6 +106,10 @@
         .login-btn:hover {
             background-color: #a9b1e2;
         }
+		
+		#forgot-btn:hover {
+			background-color: #036;
+			}
 		
 		 .reset-btn {
             background-color: #c5cafe;

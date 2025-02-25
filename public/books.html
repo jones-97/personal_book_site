@@ -10,14 +10,17 @@
 </head>
 <body>
     <div class="header">BOOKS </div>
-	 <div class="login"> <a href="/admin">Manage</a> </div>
+	 <div class="login"> 
+     
+     <button onclick="manage()">Manage</button>
+     </div>
     <div class="content" id="books-container">
    
    <!-- Books are loaded here by Javascript -->
    
  
     </div>
-    <div class="footer">About: <span>c 2025</span></div>
+    <div class="footer"> About: <span>c 2025</span></div>
     
      <script>
         async function fetchBooks() {
@@ -74,6 +77,10 @@ async function fetchRecentChapter(bookId) {
 	
 	
 }
+
+function manage() {
+	window.location.href='/admin';
+	}
         // Load books when the page loads
         window.onload = fetchBooks();
 		

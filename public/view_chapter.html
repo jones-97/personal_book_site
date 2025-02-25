@@ -46,7 +46,7 @@
     
   <div class="reading-box" id="reading-box">
     
-      <!-- <p>Chapter content goes here...</p> -->
+      <!-- Chapter content goes here... -->
       
   </div>
       
@@ -57,6 +57,7 @@
       <button class="nav-button home" onclick="backToBook()" >🏠</button>
    </div>
     
+    <div style="clear: both;"></div>
  
   
   </div>
@@ -80,10 +81,38 @@
 	 if (!response.ok) throw new Error('Failed to fetch chapter data');
 	   const currentChapter = await response.json();
 	   
+	   let contentWithAds = ""; //ads
+	   
 	   const sanitizedContent = DOMPurify.sanitize(currentChapter.content); // Sanitize the content
+	   
+	   // ads
+	  const paragraphs = sanitizedContent.split("\n\n");
+	 
 	  const chapterView = document.getElementById('reading-box');
-	   chapterView.innerHTML = sanitizedContent;
+	   
+	  //ads
+	  paragraphs.forEach((para, index) => {
+            contentWithAds += `<p>${para}</p>`;
+
+            // Insert an ad every 2 paragraphs
+            if ((index + 1) % 9 === 0) {
+                contentWithAds += `
+                    <div class="ad-placeholder">
+                        <p>Advertisement</p>
+                        <img src="ad.jpg" alt="Ad">
+                    </div>`;
+            }
+        });
+	   
+	   
+	   
+	   
+	   
+	   chapterView.innerHTML = contentWithAds;
 	   document.getElementById('chapter-title').innerHTML = currentChapter.title + "  <button onclick='backToBook()'>Return</button>";
+	   
+	   // Store last read chapter in localStorage
+        localStorage.setItem(`lastRead_${bookId}`, chapterId);
 	 
 	}
 	catch (error) {
@@ -148,16 +177,60 @@ async function fetchChapterIds() {
     }
 }
 
-// Load chapter data and IDs when the page loads
-window.onload = async () => {
-    await loadChapter();
-    await fetchChapterIds(); // Fetch chapter IDs after loading the current chapter
-};
 
 function backToBook() {
 	window.location.href = `view_book.html?bookId=${bookId}`;
 	
 }
+
+function setTheme(theme) {
+    const readingBox = document.getElementById('reading-box');
+
+    if (theme === 'light') {
+        readingBox.style.backgroundColor = 'white';
+        readingBox.style.color = 'black';
+    } else if (theme === 'dark') {
+        readingBox.style.backgroundColor = 'black';
+        readingBox.style.color = 'white';
+    } else if (theme === 'yellow') {
+        readingBox.style.backgroundColor = '#FFFAE5'; // Soft yellow
+        readingBox.style.color = 'black';
+    }
+
+    // Store theme in localStorage
+    localStorage.setItem('readingTheme', theme);
+}
+
+// Load the user's preferred theme on page load
+function loadUserTheme() {
+    const savedTheme = localStorage.getItem('readingTheme');
+    if (savedTheme) {
+        setTheme(savedTheme); // Apply saved theme
+    }
+}
+
+// Disable right-click context menu
+document.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+});
+
+// Disable Copy & Paste
+document.addEventListener('copy', (event) => {
+    event.preventDefault();
+    alert('Copying text is disabled on this page.');
+});
+
+document.addEventListener('paste', (event) => {
+    event.preventDefault();
+    alert('Pasting is not allowed.');
+});
+
+
+window.onload = async () => {
+    await loadChapter();
+    await fetchChapterIds(); // Fetch chapter IDs after loading the current chapter
+	loadUserTheme();
+};
 
 
   </script>

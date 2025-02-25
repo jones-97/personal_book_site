@@ -9,6 +9,8 @@
 <body>
 	
     <div class="container">
+    <header>
+     </header>
     	<h5 id='book-title'> For Book: Book Title </h5>
     	
         <h1>ADD NEW CHAPTER</h1>
@@ -37,7 +39,9 @@
             
             <div class="buttons">
             <button type="submit">CREATE</button>
+            
         </div>
+        <button onclick="goBack()">Return</button>
     </form>
     </div>
     <script>
@@ -100,6 +104,11 @@
                 alert('An error occurred while adding the chapter.');
             }
         });
+		
+		function goBack() {
+			window.location.href="site_settings.html";
+			}
+
 
 	window.onload = addChapterPage();
 			

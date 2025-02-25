@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="container">
+    <header> <button onclick="goBack()">Return</button> </header>
     	 <h5 id='book-title'> For Book: Book Title </h5>
        
     
@@ -28,7 +29,9 @@
         <div class="buttons">
           <button type="submit">SAVE EDITS</button>
                 <button type="button" onclick="deleteChapter()">DELETE</button>
+                
             </div>
+            <button onclick="goBack()">Return</button>
         </form>
     </div>
     <script>
@@ -100,6 +103,10 @@
                 alert('An error occurred while savind the edited chapter.');
             }
         });
+		
+		function goBack() {
+			window.location.href="site_settings.html";
+			}
 
 	window.onload = loadChapterPage();
 			

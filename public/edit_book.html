@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="add_edit_book.css" />
 </head>
 <body>
-    <div class="header"><strong>EDIT BOOK DEFINITION</strong></div>
+    <div class="header"><strong>EDIT BOOK DEFINITION</strong>
+    <button onclick="goBack()">Return</button>
+    </div>
     <div class="container">
     
     <form id='edit-book-form'>
@@ -150,6 +152,10 @@ function getSelectedGenres() {
                 alert('An error occurred while updating the book.');
             }
         });
+		
+		function goBack() {
+			window.location.href="site_settings.html";
+			}
 		
 
         // Load book details when the page loads

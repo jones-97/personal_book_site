@@ -1,4 +1,3 @@
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -8,8 +7,10 @@
     .header {
       background-color: black;
       color: white;
+	  display:flex;
       text-align: center;
       padding: 1rem;
+	  justify-content: space-between;
     }
 	
 	.header button {
@@ -21,41 +22,60 @@
             cursor: pointer;
             font-size: 1rem;
         }
+		
+	.header button:hover {
+            background-color: #306;
+        }
 
-    /* Main container */
-    .main-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: pink;
-      height: calc(100vh - 100px);
-      padding: 1rem;
-    }
+    /* Make main container take full height minus the header */
+	.main-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background-color: pink;
+		height: calc(100vh - 100px); /* Ensure it fills the viewport minus the header */
+		padding: 1rem;
+		}
+
+ 	/* Reading box styles */
+	/* Make reading box expand */
+	.reading-box {
+		flex-grow: 1; /* Allows it to expand within its container */		width: 80%;
+		min-height: 67vh; /* Adjust to cover more height */
+		max-height: calc(70vh - 100px); /* Ensures it doesn't overflow */
+		border-radius: 20px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		padding: 1rem;
+		overflow-y: auto;
+		transition: background-color 0.3s, color 0.3s;
+		background-color: white;
+		
+		/* prevent text copying */
+		user-select: none;
+		-webkit-user-select: none; /* Safari */
+		-moz-user-select: none; /* Firefox */
+		-ms-user-select: none; 
+}
+
 
     .theme-selector {
       margin-bottom: 1rem;
       font-size: 1rem;
       font-weight: bold;
     }
+	
+	.reading-box p {
+    -webkit-user-drag: none; /* Safari */
+    user-drag: none;
+}
 
-    /* Reading box styles */
-    .reading-box {
-      background-color: white;
-      width: 80%;
-      height: 60%;
-      border-radius: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 1rem;
-      overflow-y: auto;
-      transition: background-color 0.3s, color 0.3s;
-    }
 
     /* Footer navigation */
     .navigation {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-top: 0.5rem;
     }
 
     .nav-button {
@@ -75,4 +95,14 @@
     .nav-button:hover {
       filter: brightness(0.9);
     }
-  
+	
+	
+  @media (max-width: 768px) {
+    .reading-box {
+        width: 90%;
+        min-height: 75vh;
+    }
+	
+	.footer{
+		clear: both;}
+}

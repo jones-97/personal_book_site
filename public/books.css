@@ -72,11 +72,25 @@
         }
 		
 		.login {
-			padding-bottom: 2rem;
+			padding-bottom: 1rem;
 			font-size:1rem;
 			color: #00F ;
+			justify-content: center;
 			
 		}
+		
+		.login button {
+			background-color: #390;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+			}
+			
+		.login button:hover {
+			background-color:#030;}
 
         .footer {
             background-color: #7a7171;

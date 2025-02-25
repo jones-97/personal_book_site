@@ -11,6 +11,18 @@ body {
             text-align: center;
             font-size: 24px;
             font-weight: bold;
+			display: flex;
+			justify-content: space-between;
+        }
+		
+		.header button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
         .container {

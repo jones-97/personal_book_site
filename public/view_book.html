@@ -18,9 +18,13 @@
             
          
             <div class="chapters-section">
-            	<div class="chapter-placeholder" id='chapter-container'>Chapter list will appear here
+    		<button onclick="toggleSortOrder()" id="sort-button">
+        Sort: Newest First
+    		</button>
+    		<div class="chapter-placeholder" id="chapter-container">Chapter list will appear here
             </div>
-        </div>
+</div>
+
         
             </div>
         </div>
@@ -34,6 +38,8 @@
         // Get book ID from URL
 	const urlParams = new URLSearchParams(window.location.search);
     const bookId = urlParams.get('bookId');
+	
+	let sortDescending = true;
 		
 		
 		//Function to fetch book details
@@ -61,6 +67,10 @@
 		  
 			
 		  const bookDetails = document.getElementById("book-content");
+		  
+		  // Check if user has a last read chapter
+        const lastReadChapter = localStorage.getItem(`lastRead_${bookId}`);
+		
     	  bookDetails.innerHTML = `
 			
 			<div class="image" id='book-cover'>
@@ -69,12 +79,12 @@
 				
             <div class="details">
             <h2>${book.title}</h2>
-            <p><strong>Chapter Count:</strong> ${book.chapters.length}</p>
+            <p> <strong> Chapter Count: </strong> <span id='chap-count'> ${book.chapters.length}</span> </p>
             <p><strong>Synopsis: </strong> ${book.synopsis}:</p>
-            <p class="chapters">Other chapters found here: 
-				<a href="/"> Tapas </a> 
-			</p> 
+            <span> ${lastReadChapter ? `<button onclick="continueReading()" id="continue-reading-btn">Continue Reading</button>` : ''} </span>
+            </div>
 			<div> 
+			
 			<div class="chapters" id="chapter-list">
 			</div> 
 			
@@ -95,7 +105,17 @@ async function loadChapters() {
 	  const response2 = await fetch(`/api/chapters/book/${bookId}`);
 	 if (!response2.ok) throw new Error('Failed to fetch chapter data');
 	   const chapters = await response2.json();
+	   
+	   const chaptercount = chapters.length;
+	   document.getElementById('chap-count').innerHTML = chaptercount;
+	   
 	   console.log("Chapters: ", chapters);
+	   
+	   chapters.sort((a, b) => {
+            return sortDescending 
+                ? new Date(b.createdAt) - new Date(a.createdAt)  // Newest first
+                : new Date(a.createdAt) - new Date(b.createdAt); // Oldest first
+        });
 	   
 	   const chapterDetails = document.getElementById('chapter-container');
 	   chapterDetails.innerHTML = "";
@@ -116,6 +136,16 @@ async function loadChapters() {
 	
 	}
 }
+
+		  // Redirect user to the last read chapter
+	function continueReading() {
+    	const lastReadChapter = localStorage.getItem(`lastRead_${bookId}`);
+    	if (lastReadChapter) {
+        window.location.href = `view_chapter.html?chapterId=${lastReadChapter}&bookId=${bookId}`;
+    }
+}
+			  
+		
 	
 	window.onload = function() {
 		fetchBookDetails();
@@ -126,8 +156,16 @@ async function loadChapters() {
 	function backHome() {
  window.location.href = "books.html";
  }		  
-			  
-			  
+		
+	// Toggle sorting order
+	function toggleSortOrder() {
+    sortDescending = !sortDescending; // Switch order
+    loadChapters(); // Reload chapters with new sorting
+
+    // Update button text
+    const sortButton = document.getElementById("sort-button");
+    sortButton.textContent = sortDescending ? "Sort: Newest First" : "Sort: Oldest First";
+}	  
 			  
 			  
 			  

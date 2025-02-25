@@ -7,10 +7,23 @@
         .header {
             background-color: black;
             color: white;
+			display: flex;
             text-align: center;
             padding: 20px;
             font-size: 1.5em;
+			justify-content: space-between;
         }
+		
+		.header button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+		
         .container {
             padding: 20px;
         }
