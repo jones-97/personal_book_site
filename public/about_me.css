@@ -7,10 +7,22 @@
             background-color: black;
             color: white;
             text-align: center;
+			display: flex;
             padding: 20px 0;
             font-size: 2.5em;
             font-weight: bold;
+			justify-content: space-between;
         }
+		
+		.header button  {
+			background-color: #039;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+			}
 
         .content {
             display: flex;
@@ -27,7 +39,7 @@
         }
 
         .left-section img {
-            max-width: 90%;
+            max-width: 55%;
             border-radius: 10px;
         }
 
@@ -66,6 +78,11 @@
             text-decoration: none;
             font-size: 1.5em;
         }
+		
+		.contacts img {
+			width:25px;
+			height:25px;
+			}
 
         .contacts .instagram {
             color: #e4405f;

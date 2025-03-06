@@ -7,25 +7,32 @@
     <link rel="stylesheet" href="about_me.css">
 </head>
 <body>
-    <div class="header">ABOUT ME:</div>
+    <div class="header">ABOUT ME:
+    <button onclick="backHome()">Return</button></div></div>
     <div class="content">
         <div class="left-section">
-            <img src="camera.jpg" alt="Camera with Polaroids">
+            <img src="images/me_1.jpg" alt="Camera with Polaroids">
         </div>
         <div class="right-section">
             <div class="name">Jones Mwaniki</div>
+            <div class="info">Operates on UTC 03+ time</div>
             <div class="info"><strong>Skills:</strong> Programming (web, backend, database, cybersecurity)</div>
             <div class="info">Audio Transcription</div>
-            <div class="info"><strong>Projects:</strong> github website here</div>
-            <div class="info"><strong>Recent Education:</strong> Bachelor's Degree in IT</div>
+            <div class="info">Book Reviewer</div>
+            <div class="info"><strong>Projects:</strong> <a href="https://github.com/jones-97"> Github Account </a></div>
+            <div class="info"><strong>Recent Education:</strong> Degree in IT</div>
             <div class="info"><strong>Contacts:</strong></div>
             <div class="contacts">
-                <a href="#" class="instagram">📸</a>
-                <a href="#" class="email">✉️</a>
-                <a href="#" class="phone">📞</a>
+                <a href="www.instagram.com/ohmy_jones" class="instagram"><img src="images/insta.jpg"></a>
+                <a href="jonesmwaniki@proton.me" class="email"><img src="images/mail.jpg"></a>
+                <a href="+254716980815" class="phone">📞</a>
             </div>
         </div>
     </div>
     <div class="footer">© 2025</div>
+    <script> 
+    function backHome() {
+		window.location.href="/";
+	}</script>
 </body>
 </html>
