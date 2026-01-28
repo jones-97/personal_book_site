@@ -162,6 +162,8 @@ router.post("/login2", async (req, res) => {
 router.post('/request-reset', async (req, res) => {
     try {
 		
+		console.log("RESET PASSWORD Button Clicked!!!");
+		
         const admin = await Admin.findOne();
         if (!admin) return res.status(404).json({ message: "Admin not found." });
 
@@ -170,6 +172,8 @@ router.post('/request-reset', async (req, res) => {
         admin.resetToken = resetCode;
         admin.resetTokenExpiry = Date.now() + 10 * 60 * 1000; // Code expires in 10 minutes
         await admin.save();
+		console.log("GENERATED RESET CODE");
+		console.log("SENDING RESET CODE...");
 
         // Send the email
         await transporter.sendMail({
@@ -178,7 +182,8 @@ router.post('/request-reset', async (req, res) => {
             subject: "Password Reset Code",
             text: `Your verification code is: ${resetCode}`
         });
-
+		
+		console.log("RESET CODE SENT TO EMAIL :)");
         res.json({ message: "Verification code sent to email." });
 		
     } catch (error) {
@@ -187,7 +192,46 @@ router.post('/request-reset', async (req, res) => {
     }
 });
 
-router.put('/reset-password', async (req, res) => {
+//Reset password, Current
+router.put('/reset-password', async (req, res) => { 
+	const { code, newPassword } = req.body; 
+	
+	try { 
+		const admin = await Admin.findOne(); 
+		if (!admin || admin.resetToken !== code || Date.now() > admin.resetTokenExpiry) { 
+			return res.status(400).json({ message: "Invalid or expired code." }); 
+			} 
+			
+		console.log("Stored reset code: ", admin.resetToken); 
+		console.log("Received Reset Token: ", code); 
+		console.log("Checking the token expiry time..."); 
+		console.log("Current time: ", Date.now()); 
+		console.log("Reset Token Expiry: ", admin.resetTokenExpiry); 
+		
+		// Hash the new password 
+		console.log("New password input is: ", newPassword); 
+		const hashedPassword = await bcrypt.hash(newPassword, 10); 
+		admin.password = hashedPassword; 
+		console.log("Hashed password is: ", hashedPassword); 
+		admin.resetToken = null; 
+		
+		//Clear reset token 
+		admin.resetTokenExpiry = null; 
+		
+		//Clear the expiry 
+		await Admin.updateOne({ _id: admin._id }, { password: hashedPassword, resetToken: null, resetTokenExpiry: null }); 
+		// res.json({ success: true }); 
+		res.json({ message: "Password reset successfully!" }); 
+		} 
+		
+	catch (error) { 
+		res.status(500).json({ message: "Error resetting password.", error }); 
+			} 
+		
+	});
+
+//Reset the password, old
+router.put('/reset_ssds-password', async (req, res) => {
     const { code, newPassword } = req.body;
 
     try {
@@ -195,28 +239,31 @@ router.put('/reset-password', async (req, res) => {
         if (!admin || admin.resetToken !== code || Date.now() > admin.resetTokenExpiry) {
             return res.status(400).json({ message: "Invalid or expired code." });
         }
-		console.log("Stored reset code: ", admin.resetToken);
-		console.log("Received Reset Token: ", code);
-		console.log("Checking the token expiry time...");
-		console.log("Current time: ", Date.now());
-		console.log("Reset Token Expiry: ", admin.resetTokenExpiry);
-		
-        // Hash the new password
-		console.log("New password input is: ", newPassword);
+
+        console.log("Stored reset code:", admin.resetToken);
+        console.log("Received Reset Token:", code);
+        console.log("Current time:", Date.now());
+        console.log("Reset Token Expiry:", admin.resetTokenExpiry);
+
+        // Hash new password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
+		console.log("Reset, new hashed password: ", hashedPassword);
+
+        // Update admin directly
         admin.password = hashedPassword;
-		console.log("Hashed password is: ", hashedPassword);
-        admin.resetToken = null; //Clear reset token
-        admin.resetTokenExpiry = null; //Clear the expiry
-		
-        await Admin.updateOne({ _id: admin._id }, { password: hashedPassword, resetToken: null, resetTokenExpiry: null });
+        admin.resetToken = null;
+        admin.resetTokenExpiry = null;
+        await admin.save();
 
+        // ✅ SINGLE response
+        return res.json({ message: "Password reset successfully!" });
 
-        res.json({ message: "Password reset successfully!" });
     } catch (error) {
-        res.status(500).json({ message: "Error resetting password.", error });
+        console.error("Error resetting password:", error);
+        return res.status(500).json({ message: "Error resetting password." });
     }
 });
+
 
 //Test working of email
 router.post('/test-email', async (req, res) => {

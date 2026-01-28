@@ -100,3 +100,43 @@
             background-color: blue;
             color: white;
             border-color: blue;
+		}
+		
+				/* Alert Overlay (Translucent Black Background) */
+.alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Translucent black */
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Alert Box */
+.alert-box {
+    background: rgba(0, 0, 0, 0.9); /* Darker translucent black */
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+/* OK Button */
+.alert-box button {
+    background-color: #ff4081; /* Pinkish button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.alert-box button:hover {
+    background-color: #d81b60;
+}

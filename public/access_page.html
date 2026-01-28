@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
+
+<!-- Custom Alert Dialog -->
+<div id="custom-alert" class="alert-overlay">
+    <div class="alert-box">
+        <p id="alert-message">This is a custom alert.</p>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+</div>
+<!-- Custom Alert Dialog -->
+
     <div class="header">
         ACCESS PAGE
         <button onclick="backHome()">Return</button>
@@ -41,7 +51,7 @@
                     localStorage.setItem('adminToken', data.token);
                     window.location.href = 'site_settings.html';
                 } else {
-                    alert("Wrong password. Try again");
+                    showAlert("Wrong password. Try again");
                 }
             } catch (err) {
                 console.error('Error during login:', err);
@@ -61,17 +71,27 @@
                 }
 
                 const data = await response.json();
-                alert(data.message);
+                showAlert(data.message);
                 window.location.href = 'forgot_password.html';
             } catch (error) {
                 console.error('Error requesting reset:', error);
-                alert('Failed to send reset code. Please try again.');
+                showAlert('Failed to send reset code. Please try again.');
             }
         }
 
         function backHome() {
             window.location.href = "books.html";
         }
+		
+		function showAlert(message) {
+    document.getElementById('alert-message').textContent = message;
+    document.getElementById('custom-alert').style.display = "flex";
+}
+
+function closeAlert() {
+    document.getElementById('custom-alert').style.display = "none";
+}
+
     </script>
 </body>
 </html>

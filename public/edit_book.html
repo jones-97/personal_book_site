@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="add_edit_book.css" />
 </head>
 <body>
+
+<!-- Custom Alert Dialog -->
+<div id="custom-alert" class="alert-overlay">
+    <div class="alert-box">
+        <p id="alert-message">This is a custom alert.</p>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+</div>
+<!-- Custom Alert Dialog -->
+
+
     <div class="header"><strong>EDIT BOOK DEFINITION</strong>
     <button onclick="goBack()">Return</button>
     </div>
@@ -67,7 +78,7 @@
         // Fetch the book details from the backend
         async function fetchBookDetails() {
 			if (!bookId) {
-				alert("No book ID found in the URL.");
+				showAlert("No book ID found in the URL.");
 				return;
 			}
 			
@@ -87,7 +98,7 @@
 				
             } catch (error) {
                 console.error('Error fetching book details:', error);
-                alert('An error occurred while loading the book details.');
+                showAlert('An error occurred while loading the book details.');
             }
         }
 		
@@ -141,15 +152,15 @@ function getSelectedGenres() {
                 });
 
                 if (response.ok) {
-                    alert('Book updated successfully!');
+                    showAlert('Book updated successfully!');
                     window.location.href = 'site_settings.html'; // Redirect to settings page
                 } else {
                     const errorData = await response.json();
-                    alert(`Error: ${errorData.message}`);
+                    showAlert(`Error: ${errorData.message}`);
                 }
             } catch (error) {
                 console.error('Error updating book:', error);
-                alert('An error occurred while updating the book.');
+                showAlert('An error occurred while updating the book.');
             }
         });
 		
@@ -177,9 +188,9 @@ function getSelectedGenres() {
     
 
     <script>
-        document.getElementById('save-button').addEventListener('click', () => {
-            alert('Book saved!');
-        });
+     /*   document.getElementById('save-button').addEventListener('click', () => {
+            showAlert('Book saved!');
+        }); */
 
         document.getElementById('delete-button').addEventListener('click', () => {
             if (confirm('Are you sure you want to delete this book?')) {
@@ -196,6 +207,16 @@ function getSelectedGenres() {
             document.getElementById('cover-image').src = url || 'default-cover.jpg';
         
         }
+		
+			function showAlert(message) {
+    document.getElementById('alert-message').textContent = message;
+    document.getElementById('custom-alert').style.display = "flex";
+}
+
+function closeAlert() {
+    document.getElementById('custom-alert').style.display = "none";
+}
+
     </script>
 </body>
 </html>
